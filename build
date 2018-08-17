@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -rf pkg/*
+gox \
+  -output "pkg/{{.OS}}_{{.Arch}}_{{.Dir}}" \
+  ./...
