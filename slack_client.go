@@ -1,7 +1,6 @@
 package reporter
 
 import (
-	"os"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -10,7 +9,7 @@ import (
 
 // SlackClient can post horenso result to slack
 type SlackClient interface {
-	Post(*horensoOut) error
+	Post(*horensoOut, string) error
 }
 
 type slackClientImpl struct {
@@ -33,12 +32,22 @@ type slackWebhookPayloadAttachmentField struct {
 }
 
 func buildSlackWebhoolPayload(ho *horensoOut) *slackWebhookPayload {
+	color := ""
+	fallback := ""
+	if ho.ExitCode == 0 {
+		color = "#66ff00"
+		fallback = fmt.Sprintf("cron job succeeded! %s", ho.Command)
+	} else {
+		color = "#ff0000"
+		fallback = fmt.Sprintf("cron job failed! %s", ho.Command)
+	}
+
 	s := &slackWebhookPayload{
 		Attachments: []slackWebhookPayloadAttachment{
 			slackWebhookPayloadAttachment{
-				Color:    "#ff0000",
-				Fallback: fmt.Sprintf("command failed! %s", ho.Command),
-				Pretext:  "command failed!",
+				Color:    color,
+				Fallback: fallback,
+				Pretext:  fallback,
 				Fields: []slackWebhookPayloadAttachmentField{
 					slackWebhookPayloadAttachmentField{
 						Title: "command",
@@ -73,12 +82,7 @@ func NewSlackClient() SlackClient {
 	return &slackClientImpl{}
 }
 
-func (c *slackClientImpl) Post(ho *horensoOut) error {
-	url := os.Getenv("SLACK_WEBHOOK_URL")
-	if url == "" {
-		return fmt.Errorf("SLACK_WEBHOOK_URL is missing")
-	}
-
+func (c *slackClientImpl) Post(ho *horensoOut, url string) error {
 	p := buildSlackWebhoolPayload(ho)
 	json, err := json.Marshal(p)
 	if err != nil {

@@ -12,7 +12,7 @@ type mockedSlackClient struct {
 	Called bool
 }
 
-func (m *mockedSlackClient) Post(ho *horensoOut) error {
+func (m *mockedSlackClient) Post(ho *horensoOut, url string) error {
 	m.Called = true
 	return nil
 }

@@ -77,7 +77,7 @@ func Run(stdin io.Reader, stdout io.Writer, stderr io.Writer, c SlackClient) int
 		return 0
 	}
 
-	err = c.Post(ho)
+	err = c.Post(ho, opts.SlackWebhookURL)
 	if err != nil {
 		fmt.Fprintln(stderr, err.Error())
 		return 3
