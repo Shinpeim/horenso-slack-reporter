@@ -31,7 +31,7 @@ type slackWebhookPayloadAttachmentField struct {
 	Value string `json:"value"`
 }
 
-func buildSlackWebhoolPayload(ho *horensoOut) *slackWebhookPayload {
+func buildSlackWebhookPayload(ho *horensoOut) *slackWebhookPayload {
 	color := ""
 	fallback := ""
 	if ho.ExitCode == 0 {
@@ -83,7 +83,7 @@ func NewSlackClient() SlackClient {
 }
 
 func (c *slackClientImpl) Post(ho *horensoOut, url string) error {
-	p := buildSlackWebhoolPayload(ho)
+	p := buildSlackWebhookPayload(ho)
 	json, err := json.Marshal(p)
 	if err != nil {
 		return err
