@@ -34,12 +34,15 @@ type slackWebhookPayloadAttachmentField struct {
 func buildSlackWebhookPayload(ho *horensoOut) *slackWebhookPayload {
 	color := ""
 	fallback := ""
+	pretext := ""
 	if ho.ExitCode == 0 {
 		color = "#66ff00"
-		fallback = fmt.Sprintf("cron job succeeded! %s", ho.Command)
+		fallback = "cron job succeeded!"
+		pretext = fmt.Sprintf("cron job succeeded! %s", ho.Command)
 	} else {
 		color = "#ff0000"
-		fallback = fmt.Sprintf("cron job failed! %s", ho.Command)
+		fallback = "cron job failed!"
+		pretext = fmt.Sprintf("cron job failed! %s", ho.Command)
 	}
 
 	s := &slackWebhookPayload{
@@ -47,7 +50,7 @@ func buildSlackWebhookPayload(ho *horensoOut) *slackWebhookPayload {
 			slackWebhookPayloadAttachment{
 				Color:    color,
 				Fallback: fallback,
-				Pretext:  fallback,
+				Pretext:  pretext,
 				Fields: []slackWebhookPayloadAttachmentField{
 					slackWebhookPayloadAttachmentField{
 						Title: "command",
