@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./build
+
+VERSION=`cat VERSION`
+
+ghr $VERSION pkg
